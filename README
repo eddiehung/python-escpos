@@ -78,6 +78,11 @@ The following example shows how to initialize the Epson TM-TI88IV
   Epson.barcode
   Epson.barcode('1324354657687','EAN13',64,2,'','')
   Epson.cut()
+  
+  """ TM-U210D """
+  Epson = printer.serialU210('/dev/ttyUSB0')
+  Epson.image('cat.jpg')
+  Epson.qr('CAS rocks!')
 
 ------------------------------------------------------------------
 5. Links

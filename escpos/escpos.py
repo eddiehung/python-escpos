@@ -13,6 +13,7 @@ except ImportError:
 
 import qrcode
 import time
+from scipy import misc
 
 from constants import *
 from exceptions import *
@@ -349,3 +350,63 @@ class Escpos:
             self._raw(CTL_HT)
         elif ctl.upper() == "VT":
             self._raw(CTL_VT)
+
+class EscposU210(Escpos):
+    def _convert_image(self, im):
+        """ Parse image and prepare it to a printable format """
+
+        # Resize to 200 x H, preserving original aspect ratio
+        w,h = im.size
+        h *= 200.0/w
+        # Fix aspect ratio of printed result
+        h *= 63.5/70
+        h = int(h)
+        w = 200
+        im = im.resize((w,h), Image.ANTIALIAS)
+
+        # Dither into 5 colours
+        pal_rk = Image.new('P', (1,1))
+        pal_rk.putpalette( [0,0,0, 32,32,32, 255,0,0, 255-32,0,0] + [255,255,255] * (256-4) )
+        im = im.quantize(palette=pal_rk)
+        im.save('out.png')
+        im = im.transpose(Image.FLIP_LEFT_RIGHT)
+        im = im.transpose(Image.ROTATE_90)
+        # Print image upside down
+        im = im.transpose(Image.ROTATE_180)
+
+        # Convert to numpy
+        im = misc.fromimage(im)
+
+        self._print_image(im)
+
+    def _print_image(self, im):
+        """ Print formatted image """
+
+        # Print a single 8px high stripe
+        def printStripe(stripe, val):
+            self._raw('\x1B\x2A\x00\xC8\x00')
+            for col in stripe:
+                bin = ''.join(['1' if x in val else '0' for x in col])
+                # If column is less than 8 bits, pad LSBs with zero
+                bin += '0' * (8-len(bin))
+                self._raw(chr(int(bin,2)))
+            # Suppress line feed
+            self._raw('\x1B\x4A\x00')
+
+        # Loop over all 8px stripes
+        for y in xrange(0,im.shape[1],8):
+            stripe = im[:,y:y+8]
+
+            # Select red
+            self._raw('\x1B\x72\x01')
+            printStripe(stripe, (2,3))
+            printStripe(stripe, (2,))
+
+            # Select black
+            self._raw('\x1B\x72\x00')
+            printStripe(stripe, (0,1))
+            printStripe(stripe, (0,))
+
+            # Advance 16 units to next stripe
+            self._raw('\x1B\x4A\x10')
+
