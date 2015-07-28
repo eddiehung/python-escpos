@@ -80,7 +80,7 @@ The following example shows how to initialize the Epson TM-TI88IV
   Epson.cut()
   
   """ TM-U210D """
-  Epson = printer.serialU210('/dev/ttyUSB0')
+  Epson = printer.SerialU210('/dev/ttyUSB0')
   Epson.image('cat.jpg')
   Epson.qr('CAS rocks!')
 
