@@ -235,7 +235,7 @@ class Escpos:
         """ Set text properties """
         if upsidedown == False:
             self._raw(TXT_UPSIDEDOWN_OFF)
-        else
+        else:
             self._raw(TXT_UPSIDEDOWN_ON)
         # Width
         if height == 2 and width == 2:
