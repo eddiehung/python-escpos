@@ -261,7 +261,7 @@ class Escpos:
         elif type.upper() == "BU2":
             self._raw(TXT_BOLD_ON)
             self._raw(TXT_UNDERL2_ON)
-        elif type.upper() == "USD"
+        elif type.upper() == "USD":
             self._raw(TXT_UPSIDEDOWN_ON)
         elif type.upper == "NORMAL":
             self._raw(TXT_BOLD_OFF)
