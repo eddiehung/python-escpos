@@ -32,6 +32,8 @@ TXT_FONT_B      = '\x1b\x4d\x01' # Font type B
 TXT_ALIGN_LT    = '\x1b\x61\x00' # Left justification
 TXT_ALIGN_CT    = '\x1b\x61\x01' # Centering
 TXT_ALIGN_RT    = '\x1b\x61\x02' # Right justification
+TXT_UPSIDEDOWN_OFF = '\x1b\x7b\x00' # Upside down mode OFF
+TXT_UPSIDEDOWN_ON = '\x1b\x7b\x01' # Upside down mode ON
 # Char code table
 CHARCODE_PC437  = '\x1b\x74\x00' # USA: Standard Europe
 CHARCODE_JIS    = '\x1b\x74\x01' # Japanese Katakana
