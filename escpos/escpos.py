@@ -395,6 +395,8 @@ class EscposU210(Escpos):
                 self._raw(chr(int(bin,2)))
             # Suppress line feed
             self._raw('\x1B\x4A\x00')
+            # DSRDTR doesn't work
+            time.sleep(1)
 
         # Loop over all 8px stripes
         for y in xrange(0,im.shape[1],8):
