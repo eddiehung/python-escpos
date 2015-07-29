@@ -231,8 +231,12 @@ class Escpos:
             raise TextError()
 
 
-    def set(self, align='left', font='a', type='normal', width=1, height=1, density=9):
+    def set(self, align='left', font='a', type='normal', width=1, height=1, density=9, upsidedown=False):
         """ Set text properties """
+        if upsidedown == False:
+            self._raw(TXT_UPSIDEDOWN_OFF)
+        else
+            self._raw(TXT_UPSIDEDOWN_ON)
         # Width
         if height == 2 and width == 2:
             self._raw(TXT_NORMAL)
@@ -261,12 +265,9 @@ class Escpos:
         elif type.upper() == "BU2":
             self._raw(TXT_BOLD_ON)
             self._raw(TXT_UNDERL2_ON)
-        elif type.upper() == "USD":
-            self._raw(TXT_UPSIDEDOWN_ON)
         elif type.upper == "NORMAL":
             self._raw(TXT_BOLD_OFF)
             self._raw(TXT_UNDERL_OFF)
-            self._raw(TXT_UPSIDEDOWN_OFF)
         # Font
         if font.upper() == "B":
             self._raw(TXT_FONT_B)
