@@ -358,15 +358,28 @@ class Escpos:
 class EscposU210(Escpos):
     def _convert_image(self, im):
         """ Parse image and prepare it to a printable format """
+        
+        # Scale the image so that the maximum dimension is 200 pixels
 
-        # Resize to 200 x H, preserving original aspect ratio
+        MAX_SIZE = 200.0
+        H_ADJ = 63.5/70
+
         w,h = im.size
-        h *= 200.0/w
-        # Fix aspect ratio of printed result
-        h *= 63.5/70
-        h = int(h)
-        w = 200
-        im = im.resize((w,h), Image.ANTIALIAS)
+
+        if h>w:
+            # The image is portrait, scale to be 200 pixels high
+            w = (w*MAX_SIZE)/h
+            h = MAX_SIZE
+
+        else:
+            # The image is landscale, scale to be 200 pixels wide
+            h = (h*MAX_SIZE)/w
+            w = MAX_SIZE
+
+        # Adjust height for non-square pixels
+        h *= H_ADJ
+
+        im = im.resize((int(w), int(h)), Image.ANTIALIAS)
 
         # Dither into 5 colours
         pal_rk = Image.new('P', (1,1))
