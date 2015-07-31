@@ -381,6 +381,11 @@ class EscposU210(Escpos):
 
         im = im.resize((int(w), int(h)), Image.ANTIALIAS)
 
+        # Need to add a white boarder to keep images 200 pixels wide
+        canvas = Image.new('RGB', (int(MAX_SIZE), int(h)), 'white')
+        canvas.paste(im, (int((MAX_SIZE-w)/2),0))
+        im = canvas
+
         # Dither into 5 colours
         pal_rk = Image.new('P', (1,1))
         pal_rk.putpalette( [0,0,0, 32,32,32, 255,0,0, 255-32,0,0] + [255,255,255] * (256-4) )
